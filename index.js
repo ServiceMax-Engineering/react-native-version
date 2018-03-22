@@ -192,20 +192,13 @@ function version(program, projectPath, buildNumber) {
 
 			if (!programOpts.incrementBuild) {
 				var versionName = appPkg.version;
-				if (buildNum) versionName += '+' + buildNum;
 				child.spawnSync('agvtool', ['new-marketing-version', versionName], agvtoolOpts);
 			}
 
 			if (programOpts.resetBuild) {
 				child.execSync('agvtool new-version -all 1', agvtoolOpts);
 			} else if (buildNum) {
-				const newVersionNumber = (
-					majorVersion * 1000000000 +
-					minorVersion * 1000000 +
-					patchVersion * 1000 +
-					parseInt(buildNum, 10)
-				);
-				child.execSync('agvtool new-version -all ' + newVersionNumber, agvtoolOpts);
+				child.execSync('agvtool new-version -all ' + buildNum, agvtoolOpts);
 			} else {
 				child.execSync('agvtool next-version -all', agvtoolOpts);
 			}
