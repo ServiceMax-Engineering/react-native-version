@@ -120,7 +120,8 @@ function version(program, projectPath, buildNumber) {
 
 			if (!programOpts.incrementBuild) {
 				var versionName = appPkg.version;
-				if (buildNum) versionName += '+' + buildNum;
+				// change to (buildNum) required by PM
+				if (buildNum) versionName += ' (' + buildNum + ')';
 				gradleFile = gradleFile.replace(
 					/versionName "(.*)"/, 'versionName "' + versionName + '"'
 				);
@@ -128,10 +129,16 @@ function version(program, projectPath, buildNumber) {
 
 			gradleFile = gradleFile
 			.replace(/versionCode (\d+)/, function(match, cg1) {
+				// Warning: The greatest value Google Play allows for versionCode is 2100000000.
+				// we already took 1 in the highest position accidentally. To correct this issue,
+				// we will allocate 2 digits for major, minor and patch version and last 4 digits
+				// for the build number. In this case, the highest version will be 10.99.99
+				// and build 9999
 				const newVersionCodeNumber = (
-					majorVersion * 1000000000 +
+					1000000000 +
+					majorVersion * 100000000 +
 					minorVersion * 1000000 +
-					patchVersion * 1000 +
+					patchVersion * 10000 +
 					parseInt(buildNum ? buildNum : cg1, 10)
 				);
 				return 'versionCode ' + newVersionCodeNumber;
