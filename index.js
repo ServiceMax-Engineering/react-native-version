@@ -118,15 +118,6 @@ function version(program, projectPath, buildNumber) {
 				]);
 			}
 
-			if (!programOpts.incrementBuild) {
-				var versionName = appPkg.version;
-				// change to (buildNum) required by PM
-				if (buildNum) versionName += ' (' + buildNum + ')';
-				gradleFile = gradleFile.replace(
-					/versionName "(.*)"/, 'versionName "' + versionName + '"'
-				);
-			}
-
 			gradleFile = gradleFile
 			.replace(/versionCode (\d+)/, function(match, cg1) {
 				// Warning: The greatest value Google Play allows for versionCode is 2100000000.
